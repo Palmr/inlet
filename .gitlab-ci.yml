@@ -1,6 +1,27 @@
-image: "rust:latest"
+stages:
+  - test
 
-test:cargo:
+test:
+  stage: test
+  tags:
+  - docker
+  image: 'docker-proxy.lddev-repo.ix3.lmax/rust:latest'
   script:
     - rustc --version && cargo --version  # Print version info for debugging
     - cargo test --workspace --verbose
+
+formatting:
+  stage: test
+  tags:
+  - docker
+  image: 'docker-proxy.lddev-repo.ix3.lmax/rust:latest'
+  script:
+    - cargo fmt --all -- --check
+
+clippy:
+  stage: test
+  tags:
+  - docker
+  image: 'docker-proxy.lddev-repo.ix3.lmax/rust:latest'
+  script:
+    - cargo clippy -- -D warnings
